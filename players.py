@@ -1,8 +1,6 @@
 from cmath import inf
 from copy import deepcopy
-from gettext import npgettext
 import random
-import sys
 import time
 import pygame
 import math
@@ -54,7 +52,6 @@ class randomAI(connect4Player):
 
 	def play(self, env, move):
 		possible = env.topPosition >= 0
-
 		indices = []
 		for i, p in enumerate(possible):
 			if p: indices.append(i)
@@ -81,11 +78,9 @@ class stupidAI(connect4Player):
 			move[:] = [0]
 
 class minimaxAI(connect4Player):
-	# Evaluation Functions For miniMax AT
+	# Evaluation Functions For miniMax AI
 	# eval(env) = 1 C1 + 5 C2 + 10 C3
-	# Use Hashing to count consecutive pieces
 	def eval (self, env):
-
 		# determine the players
 		if self.turnPlayer == self.player1:
 			player = 1
@@ -93,13 +88,16 @@ class minimaxAI(connect4Player):
 			player = 2
 		move = self.playTurn()
 		# if we win
-		if self.gameOver(self, move, player) and player == 1:
+		if self.gameOver(move, player) and player ==1:
 			return inf
 		# if we lose
-		elif self.gameOver(self, move, player) and player == 2:
+		elif self.gameOver(move, player) and player ==2:
 			return -inf
 	
 		output_dict = {}
+		row1 =  [0, 1, 1, 0, 1, 0, 1]
+		count = 0, 1, 2,0, 1, 0, 1
+		output_dict={2:1, 1:2}
 		# check the rows
 		for i in range(6):
 			count = 0
@@ -118,7 +116,7 @@ class minimaxAI(connect4Player):
 		# check the columns
 		for i in range(7):
 			count = 0
-			for j in range(len(self.board[:i])):
+			for j in range(6):
 				if self.board[i][j] == player:	
 					count += 1
 				else:
@@ -130,7 +128,7 @@ class minimaxAI(connect4Player):
 						output_dict[count] = 1
 					count = 0
 			
-		# Check Diagonals use board.diagonal(0)
+		# Check Diagonals use board.diagonal(0) =  [0, 1, 1, 0, 1, 0, 1]0 to 6
 		for i in range(-2,4):
 			count = 0
 			for j in range(len(self.board.diagonal(i))):
@@ -145,97 +143,26 @@ class minimaxAI(connect4Player):
 						output_dict[count] = 1
 					count = 0
 
-		flipped_board = npgettext.fliplr(self.board)
+		flipped_board = np.fliplr(self.board)
 		for i in range(-2,4):
-			count = 1
+			count = 0
 			for j in range(len(flipped_board.diagonal(i))):
 				if self.board[i][j] == player:	
 					count += 1
 				else:
-					if count == 0:
+					if  count == 0:
 						continue
 					if output_dict[count]:
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
 					count = 0
-		env_eval = deepcopy(env)
-		output_dict = {}
-		# check the rows
-		for i in range(6):
-			count = 1
-			for j in range(len(0, self.board[i]-1)):
-				if self.board[i][j] and self.board[i][j] == self.board[i][j+1]:	
-					count += 1
-				else:
-					continue
-			count = max(count, count)
-			if output_dict[count]:
-				output_dict[count] += 1 
-			else:
-				output_dict[count] = 0
-		# check the columns
-		for i in range(7):
-			count = 1
-			for j in range(len(0, self.board[:i]-1)):
-				if self.board[:i][j] and self.board[:i][j] == self.board[:i][j+1]:	
-					count += 1
-				else:
-					continue
-			count = max(count, count)
-			if output_dict[count]:
-				output_dict[count] += 1 
-			else:
-				output_dict[count] = 0
-
-		# Check Diagonals use board.diagonal(0)
-		for i in range(-2,3):
-			count = 1
-			for j in range(len(0, self.board.diagonal(i))):
-				if self.board(i)[j] and self.board[i][j] == self.board[i][j+1]:	
-					count += 1
-				else:
-					continue
-			count = max(count, count)
-			if output_dict[count]:
-				output_dict[count] += 1 
-			else:
-				output_dict[count] = 0
-
 
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		return res
 
-	def MAX(state, depth):
-		if gameover(state) or depth == 0:
-			retrun eval(state)
-		possible = env.topPosition >= 0
-		max_v = -inf
-		for move in possible:
-			child = simulateMove(deepcopy(env), move, self.opponent.position) 
-			max_v = max(max_v, MIN(child, depth-1))
-		return max_v
 
-	def MIN(state, depth):
-		if gameover(state) or depth == 0:
-			return eval(state)
-		possible = env.topPosition >= 0
-		max_v = inf
-		for move in possible:
-			child = simulateMove(deepcopy(env), move, self.position)
-			max_v = min(max_v, MAX(child, depth-1))
-		return max_v
-	
-	def Minimax(env, max_depth):
-		possible = env.topPosition >= 0
-		max_v = -inf
-		for move in possible:
-			child = simulateMove(deepcopy(env), move, self.opponent.position)
-			v = MIN(child, depth-1)
-			if v > max_v:
-				max_v = v
-				move[:] = [move]
-				
+
 	def play(self, env, move):
 		pass
 
