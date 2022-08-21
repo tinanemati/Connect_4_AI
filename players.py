@@ -54,6 +54,7 @@ class randomAI(connect4Player):
 
 	def play(self, env, move):
 		possible = env.topPosition >= 0
+
 		indices = []
 		for i, p in enumerate(possible):
 			if p: indices.append(i)
@@ -84,6 +85,7 @@ class minimaxAI(connect4Player):
 	# eval(env) = 1 C1 + 5 C2 + 10 C3
 	# Use Hashing to count consecutive pieces
 	def eval (self, env):
+
 		# determine the players
 		if self.turnPlayer == self.player1:
 			player = 1
@@ -157,11 +159,52 @@ class minimaxAI(connect4Player):
 					else:
 						output_dict[count] = 1
 					count = 0
+		env_eval = deepcopy(env)
+		output_dict = {}
+		# check the rows
+		for i in range(6):
+			k = 1
+			for j in range(len(0, self.board[i]-1)):
+				if self.board[i][j] and self.board[i][j] == self.board[i][j+1]:	
+					k += 1
+				else:
+					continue
+			count = max(count, k)
+			if output_dict[count]:
+				output_dict[count] += 1 
+			else:
+				output_dict[count] = 0
+		# check the columns
+		for i in range(7):
+			k = 1
+			for j in range(len(0, self.board[:i]-1)):
+				if self.board[:i][j] and self.board[:i][j] == self.board[:i][j+1]:	
+					k += 1
+				else:
+					continue
+			count = max(count, k)
+			if output_dict[count]:
+				output_dict[count] += 1 
+			else:
+				output_dict[count] = 0
+
+		# Check Diagonals use board.diagonal(0)
+		for i in range(-2,3):
+			k = 1
+			for j in range(len(0, self.board.diagonal(i))):
+				if self.board(i)[j] and self.board[i][j] == self.board[i][j+1]:	
+					k += 1
+				else:
+					continue
+			count = max(count, k)
+			if output_dict[count]:
+				output_dict[count] += 1 
+			else:
+				output_dict[count] = 0
+
 
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		return res
-
-
 
 	def play(self, env, move):
 		pass
