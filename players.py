@@ -206,38 +206,41 @@ class minimaxAI(connect4Player):
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		return res
 
-	def MAX(state, depth):
-		if gameover(state) or depth == 0:
-			retrun eval(state)
-		possible = env.topPosition >= 0
+	def simulatemove(self, env, move, player):
+		env.board[env.topPosition[move]][move] = player
+		env.topPosition[move] -= 1
+		env.history[0].append(move)
+
+	def MAX(self, state, depth):
+		if self.gameOver(state) or depth == 0:
+			return eval(self, state)
+		possible = self.env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
-			child = simulateMove(deepcopy(env), move, self.opponent.position) 
-			max_v = max(max_v, MIN(child, depth-1))
+			child = self.simulatemove(deepcopy(self.env), move, self.opponent.position) 
+			max_v = max(max_v, self.MIN(child, depth-1))
 		return max_v
 
-	def MIN(state, depth):
-		if gameover(state) or depth == 0:
-			return eval(state)
-		possible = env.topPosition >= 0
+	def MIN(self, state, depth):
+		if self.gameOver(state) or depth == 0:
+			return eval(self,state)
+		possible = self.env.topPosition >= 0
 		max_v = inf
 		for move in possible:
-			child = simulateMove(deepcopy(env), move, self.position)
-			max_v = min(max_v, MAX(child, depth-1))
+			child = self.simulatemove(deepcopy(self.env), move, self.position)
+			max_v = min(max_v, self.MAX(child, depth-1))
 		return max_v
 	
-	def Minimax(env, max_depth):
+	max_depth = 5
+	def play(self, env, max_depth):
 		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
-			child = simulateMove(deepcopy(env), move, self.opponent.position)
-			v = MIN(child, depth-1)
+			child = env.simulatemove(deepcopy(env), move, env.opponent.position)
+			v = env.MIN(child, max_depth-1)
 			if v > max_v:
 				max_v = v
 				move[:] = [move]
-				
-	def play(self, env, move):
-		pass
 
 class alphaBetaAI(connect4Player):
 
