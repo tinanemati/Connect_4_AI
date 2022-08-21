@@ -161,7 +161,6 @@ class minimaxAI(connect4Player):
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		return res
 
-<<<<<<< HEAD
 	def simulatemove(self, env, move, player):
 		env.board[env.topPosition[move]][move] = player
 		env.topPosition[move] -= 1
@@ -197,12 +196,10 @@ class minimaxAI(connect4Player):
 			if v > max_v:
 				max_v = v
 				move[:] = [move]
-=======
 
 
 	def play(self, env, move):
 		pass
->>>>>>> 226b04416b2e5365996613c2daf84bdd5c7513a9
 
 class alphaBetaAI(connect4Player):
 
