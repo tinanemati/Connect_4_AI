@@ -147,7 +147,7 @@ class minimaxAI(connect4Player):
 
 		flipped_board = npgettext.fliplr(self.board)
 		for i in range(-2,4):
-			k = 1
+			count = 1
 			for j in range(len(flipped_board.diagonal(i))):
 				if self.board[i][j] == player:	
 					count += 1
@@ -163,26 +163,26 @@ class minimaxAI(connect4Player):
 		output_dict = {}
 		# check the rows
 		for i in range(6):
-			k = 1
+			count = 1
 			for j in range(len(0, self.board[i]-1)):
 				if self.board[i][j] and self.board[i][j] == self.board[i][j+1]:	
-					k += 1
+					count += 1
 				else:
 					continue
-			count = max(count, k)
+			count = max(count, count)
 			if output_dict[count]:
 				output_dict[count] += 1 
 			else:
 				output_dict[count] = 0
 		# check the columns
 		for i in range(7):
-			k = 1
+			count = 1
 			for j in range(len(0, self.board[:i]-1)):
 				if self.board[:i][j] and self.board[:i][j] == self.board[:i][j+1]:	
-					k += 1
+					count += 1
 				else:
 					continue
-			count = max(count, k)
+			count = max(count, count)
 			if output_dict[count]:
 				output_dict[count] += 1 
 			else:
@@ -190,13 +190,13 @@ class minimaxAI(connect4Player):
 
 		# Check Diagonals use board.diagonal(0)
 		for i in range(-2,3):
-			k = 1
+			count = 1
 			for j in range(len(0, self.board.diagonal(i))):
 				if self.board(i)[j] and self.board[i][j] == self.board[i][j+1]:	
-					k += 1
+					count += 1
 				else:
 					continue
-			count = max(count, k)
+			count = max(count, count)
 			if output_dict[count]:
 				output_dict[count] += 1 
 			else:
@@ -206,6 +206,36 @@ class minimaxAI(connect4Player):
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		return res
 
+	def MAX(state, depth):
+		if gameover(state) or depth == 0:
+			retrun eval(state)
+		possible = env.topPosition >= 0
+		max_v = -inf
+		for move in possible:
+			child = simulateMove(deepcopy(env), move, self.opponent.position) 
+			max_v = max(max_v, MIN(child, depth-1))
+		return max_v
+
+	def MIN(state, depth):
+		if gameover(state) or depth == 0:
+			return eval(state)
+		possible = env.topPosition >= 0
+		max_v = inf
+		for move in possible:
+			child = simulateMove(deepcopy(env), move, self.position)
+			max_v = min(max_v, MAX(child, depth-1))
+		return max_v
+	
+	def Minimax(env, max_depth):
+		possible = env.topPosition >= 0
+		max_v = -inf
+		for move in possible:
+			child = simulateMove(deepcopy(env), move, self.opponent.position)
+			v = MIN(child, depth-1)
+			if v > max_v:
+				max_v = v
+				move[:] = [move]
+				
 	def play(self, env, move):
 		pass
 
