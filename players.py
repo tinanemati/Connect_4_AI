@@ -3,8 +3,9 @@ from copy import deepcopy
 import random
 import time
 import pygame
+import numpy as np
 import math
-import numpy
+
 
 class connect4Player(object):
 	def __init__(self, position, seed=0):
@@ -167,24 +168,23 @@ class minimaxAI(connect4Player):
 		env.topPosition[move] -= 1
 		env.history[0].append(move)
 
-	def MAX(self, env, state, depth):
-		if self.gameOver(state) or depth == 0:
-			return eval(self, state)
+	def MAX(self, env, depth):
+		if env.gameOver(env) or depth == 0:
+			return eval(env)
 		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
-			#why is this not defined?
 			child = self.simulateMove(deepcopy(env), move, self.opponent.position) 
 			max_v = max(max_v, self.MIN(child, depth-1))
 		return max_v
 
-	def MIN(self, state, depth):
-		if self.gameOver(state) or depth == 0:
-			return eval(self,state)
-		possible = self.env.topPosition >= 0
+	def MIN(self, env, depth):
+		if env.gameOver(env) or depth == 0:
+			return eval(env)
+		possible = env.topPosition >= 0
 		max_v = inf
 		for move in possible:
-			#why is this not defined?
+
 			child = self.simulateMove(deepcopy(env), move, self.position)
 			max_v = min(max_v, self.MAX(child, depth-1))
 		return max_v
@@ -196,7 +196,7 @@ class minimaxAI(connect4Player):
 		for move in possible:
 			#why is this not defined?
 			child = self.simulateMove(deepcopy(env), move, self.opponent.position)
-			v = self.MIN(child, depth-1)
+			v = self.MIN(child, max_depth-1)
 			if v > max_v:
 				max_v = v
 				move[:] = [move]

@@ -200,6 +200,11 @@ class connect4():
 			return True
 		return len(self.history[0]) + len(self.history[1]) == self.shape[0]*self.shape[1]
 
+	def simulatemove(self, env, move, player):
+		env.board[env.topPosition[move]][move] = player
+		env.topPosition[move] -= 1
+		env.history[0].append(move)
+		
 	def saveGame(self):
 		with open(os.path.join('history', 'game'+str(self.game)+'P1.txt'), 'w') as filehandle:
 			for item in self.history[0]:
