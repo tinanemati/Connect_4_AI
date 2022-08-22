@@ -197,10 +197,6 @@ class minimaxAI(connect4Player):
 				max_v = v
 				move[:] = [move]
 
-
-	def play(self, env, move):
-		pass
-
 class alphaBetaAI(connect4Player):
 
 	def play(self, env, move):
