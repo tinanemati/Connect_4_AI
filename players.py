@@ -189,7 +189,7 @@ class minimaxAI(connect4Player):
 			max_v = min(max_v, self.MAX(child, depth-1))
 		return max_v
 	
-	def Minimax(self,env,max_depth):
+	def Minimax(self,env, move, max_depth):
 		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
@@ -202,7 +202,7 @@ class minimaxAI(connect4Player):
 	def play(self, env, move):
 		self.Minimax(deepcopy(env), move, 5)
 		print("Finished")
-		
+
 class alphaBetaAI(connect4Player):
 
 	def play(self, env, move):
