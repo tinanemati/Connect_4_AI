@@ -98,13 +98,14 @@ class minimaxAI(connect4Player):
 			return -inf
 	
 		output_dict = {}
-		
 		# check the rows
 		for i in range(6):
 			count = 0
+			print(self.board[i])
 			for j in range(7):
-				if board[i][j] == player:	
-					count += 1		
+				if self.board[i][j] == player:	
+					count += 1
+					
 				else:
 					if count == 0:
 						continue
@@ -112,18 +113,47 @@ class minimaxAI(connect4Player):
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
-					
+						
 					count = 0
+
 			if count in output_dict and count!=0:
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
+			print(output_dict)
+
 
 		# check the columns
 		for i in range(7):
 			count = 0
 			for j in range(6):
-				if board[j][i] == player:	
+				if self.board[j][i] == player:	
+					count += 1
+					
+				else:
+					if count == 0:
+						continue
+					if count in output_dict:
+						output_dict[count] += 1 
+					else:
+						output_dict[count] = 1
+					count = 0
+
+			if count in output_dict and count!=0:
+				output_dict[count] += 1 
+			elif not(count in output_dict) and count != 0 :
+				output_dict[count] = 1
+			print(output_dict)
+					
+			
+		# Check Diagonals use
+		for i in range(-2,4):
+			count = 0
+			row = self.board.diagonal(i)
+			print(row)
+			for j in range(len(row)):
+				
+				if row[j] == player:	
 					count += 1
 				else:
 					if count == 0:
@@ -132,17 +162,19 @@ class minimaxAI(connect4Player):
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
-					
 					count = 0
+
 			if count in output_dict and count!=0:
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
-			
-		#Check Diagonals
+			print(output_dict)
+
+		flipped_board = numpy.fliplr(self.board)
+		print(flipped_board)
 		for i in range(-2,4):
 			count = 0
-			row = board.diagonal(i)
+			row = flipped_board.diagonal(i)
 			print(row)
 			for j in range(len(row)):
 				if row[j] == player:	
@@ -154,36 +186,16 @@ class minimaxAI(connect4Player):
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
-					
 					count = 0
+
 			if count in output_dict and count!=0:
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
-				
-		#filpped board to check right diagonals
-		flipped_board = numpy.fliplr(board)
-		for i in range(-2,4):
-			count = 0
-			row = flipped_board.diagonal(i)
-			for j in range(len(row)):
-				if row[j] == player:	
-					count += 1
-				else:
-					if count == 0:
-						continue
-					if count in output_dict:
-						output_dict[count] += 1 
-					else:
-						output_dict[count] = 1
-					
-					count = 0
-			if count in output_dict and count!=0:
-				output_dict[count] += 1 
-			elif not(count in output_dict) and count != 0 :
-				output_dict[count] = 1
+			
+		print(output_dict)
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
-		#print(res)
+		print(res)
 		return res
 
 	def simulateMove(self, env, move, player):
