@@ -4,6 +4,7 @@ import random
 import time
 import pygame
 import math
+import numpy
 
 class connect4Player(object):
 	def __init__(self, position, seed=0):
@@ -77,6 +78,7 @@ class stupidAI(connect4Player):
 		else:
 			move[:] = [0]
 
+#does the evalution make sense?
 class minimaxAI(connect4Player):
 	# Evaluation Functions For miniMax AI
 	# eval(env) = 1 C1 + 5 C2 + 10 C3
@@ -95,9 +97,6 @@ class minimaxAI(connect4Player):
 			return -inf
 	
 		output_dict = {}
-		row1 =  [0, 1, 1, 0, 1, 0, 1]
-		count = 0, 1, 2,0, 1, 0, 1
-		output_dict={2:1, 1:2}
 		# check the rows
 		for i in range(6):
 			count = 0
@@ -143,8 +142,8 @@ class minimaxAI(connect4Player):
 						output_dict[count] = 1
 					count = 0
 
-		flipped_board = np.fliplr(self.board)
-		for i in range(-2,4):
+		flipped_board = np.fliplr(self.board) 
+		for i in range(-3,2):
 			count = 0
 			for j in range(len(flipped_board.diagonal(i))):
 				if self.board[i][j] == player:	
@@ -157,22 +156,25 @@ class minimaxAI(connect4Player):
 					else:
 						output_dict[count] = 1
 					count = 0
-
+		#how can we know if landas need to be modified?
+		#how do we test the eval fundtion?
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
+		#print(res)
 		return res
 
-	def simulatemove(self, env, move, player):
+	def simulateMove(self, env, move, player):
 		env.board[env.topPosition[move]][move] = player
 		env.topPosition[move] -= 1
 		env.history[0].append(move)
 
-	def MAX(self, state, depth):
+	def MAX(self, env, state, depth):
 		if self.gameOver(state) or depth == 0:
 			return eval(self, state)
-		possible = self.env.topPosition >= 0
+		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
-			child = self.simulatemove(deepcopy(self.env), move, self.opponent.position) 
+			#why is this not defined?
+			child = self.simulateMove(deepcopy(env), move, self.opponent.position) 
 			max_v = max(max_v, self.MIN(child, depth-1))
 		return max_v
 
@@ -182,7 +184,8 @@ class minimaxAI(connect4Player):
 		possible = self.env.topPosition >= 0
 		max_v = inf
 		for move in possible:
-			child = self.simulatemove(deepcopy(self.env), move, self.position)
+			#why is this not defined?
+			child = self.simulateMove(deepcopy(env), move, self.position)
 			max_v = min(max_v, self.MAX(child, depth-1))
 		return max_v
 	
@@ -191,8 +194,9 @@ class minimaxAI(connect4Player):
 		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
-			child = env.simulatemove(deepcopy(env), move, env.opponent.position)
-			v = env.MIN(child, max_depth-1)
+			#why is this not defined?
+			child = self.simulateMove(deepcopy(env), move, self.opponent.position)
+			v = self.MIN(child, depth-1)
 			if v > max_v:
 				max_v = v
 				move[:] = [move]
