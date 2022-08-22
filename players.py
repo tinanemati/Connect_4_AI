@@ -117,7 +117,7 @@ class minimaxAI(connect4Player):
 		for i in range(7):
 			count = 0
 			for j in range(6):
-				if self.board[i][j] == player:	
+				if self.board[j][i] == player:	
 					count += 1
 				else:
 					if count == 0:
