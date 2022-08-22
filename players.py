@@ -98,67 +98,90 @@ class minimaxAI(connect4Player):
 			return -inf
 	
 		output_dict = {}
+		
 		# check the rows
 		for i in range(6):
 			count = 0
 			for j in range(7):
-				if self.board[i][j] == player:	
-					count += 1
+				if board[i][j] == player:	
+					count += 1		
 				else:
 					if count == 0:
 						continue
-					if output_dict[count]:
+					if count in output_dict:
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
+					
 					count = 0
-			
+			if count in output_dict and count!=0:
+				output_dict[count] += 1 
+			elif not(count in output_dict) and count != 0 :
+				output_dict[count] = 1
+
 		# check the columns
 		for i in range(7):
 			count = 0
 			for j in range(6):
-				if self.board[j][i] == player:	
+				if board[j][i] == player:	
 					count += 1
 				else:
 					if count == 0:
 						continue
-					if output_dict[count]:
+					if count in output_dict:
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
+					
 					count = 0
+			if count in output_dict and count!=0:
+				output_dict[count] += 1 
+			elif not(count in output_dict) and count != 0 :
+				output_dict[count] = 1
 			
-		# Check Diagonals use board.diagonal(0) =  [0, 1, 1, 0, 1, 0, 1]0 to 6
+		#Check Diagonals
 		for i in range(-2,4):
 			count = 0
-			for j in range(len(self.board.diagonal(i))):
-				if self.board[i][j] == player:	
+			row = board.diagonal(i)
+			print(row)
+			for j in range(len(row)):
+				if row[j] == player:	
 					count += 1
 				else:
 					if count == 0:
 						continue
-					if output_dict[count]:
+					if count in output_dict:
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
+					
 					count = 0
-
-		flipped_board = np.fliplr(self.board) 
-		for i in range(-3,2):
+			if count in output_dict and count!=0:
+				output_dict[count] += 1 
+			elif not(count in output_dict) and count != 0 :
+				output_dict[count] = 1
+				
+		#filpped board to check right diagonals
+		flipped_board = numpy.fliplr(board)
+		for i in range(-2,4):
 			count = 0
-			for j in range(len(flipped_board.diagonal(i))):
-				if self.board[i][j] == player:	
+			row = flipped_board.diagonal(i)
+			for j in range(len(row)):
+				if row[j] == player:	
 					count += 1
 				else:
-					if  count == 0:
+					if count == 0:
 						continue
-					if output_dict[count]:
+					if count in output_dict:
 						output_dict[count] += 1 
 					else:
 						output_dict[count] = 1
+					
 					count = 0
-		#how can we know if landas need to be modified?
-		#how do we test the eval fundtion?
+			if count in output_dict and count!=0:
+				output_dict[count] += 1 
+			elif not(count in output_dict) and count != 0 :
+				output_dict[count] = 1
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		#print(res)
 		return res
