@@ -189,18 +189,20 @@ class minimaxAI(connect4Player):
 			max_v = min(max_v, self.MAX(child, depth-1))
 		return max_v
 	
-	max_depth = 5
-	def play(self, env, max_depth):
+	def Minimax(self,env,max_depth):
 		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
-			#why is this not defined?
 			child = self.simulateMove(deepcopy(env), move, self.opponent.position)
 			v = self.MIN(child, max_depth-1)
 			if v > max_v:
 				max_v = v
 				move[:] = [move]
 
+	def play(self, env, move):
+		self.Minimax(deepcopy(env), move, 5)
+		print("Finished")
+		
 class alphaBetaAI(connect4Player):
 
 	def play(self, env, move):
