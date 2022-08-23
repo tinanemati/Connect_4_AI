@@ -85,27 +85,22 @@ class minimaxAI(connect4Player):
 	# eval(env) = 1 C1 + 5 C2 + 10 C3
 	def eval (self, env):
 		# determine the players
-		if env.turnPlayer == env.player1:
+		if self.position == 1:
 			player = 1
 		else:
 			player = 2
-		#move = env.playTurn()
-		# if we win
-		#if env.gameOver(move, player) and player ==1:
-			#return inf
-		# if we lose
-		#elif env.gameOver(move, player) and player ==2:
-			#return -inf
-	
+		
 		output_dict = {}
 		# check the rows
 		for i in range(6):
 			count = 0
 			#print(self.board[i])
 			for j in range(7):
-				if env.board[i][j] == player:	
-					count += 1
-					
+				if env.board[i][j] == 1:	
+					count_player1 += 1
+				
+				# if env.board[i][j] == 2:	
+				# 	count_player += 1
 				else:
 					if count == 0:
 						continue
@@ -127,7 +122,9 @@ class minimaxAI(connect4Player):
 		for i in range(7):
 			count = 0
 			for j in range(6):
-				if env.board[j][i] == player:	
+				if env.board[j][i] == self.position:	
+					count += 1
+				elif env.board[j][i] == self.opponent.position:	
 					count += 1
 					
 				else:
@@ -196,8 +193,9 @@ class minimaxAI(connect4Player):
 		#this is where I had to chage the res, but it is still not right
 		# I don't know exactly how does it word to fix it. 	
 		#print(output_dict)
+		#res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
 		res = 1 * output_dict.get(1,0) + 5 * output_dict.get(2,0) + 10 * output_dict.get(3,0)
-		#print(res)
+		#print("score res from eval: " + res)
 		return res
 
 	def simulateMove(self, env, move, player):
@@ -206,25 +204,23 @@ class minimaxAI(connect4Player):
 		env.history[0].append(move)
 		return env
 
-	def MAX(self, env, prev_move, depth):
-		#not sure here?
+	def MAX(self, env, prev_move, depth): 
 		if env.gameOver(prev_move,self.opponent.position):
-			return inf
+			return -inf
 		if depth == 0:
 			return self.eval(env)
 		
 		possible = env.topPosition >= 0
 		max_v = -inf
-		for idx, move in enumerate(possible):
+		for idx,move in enumerate(possible):
 			if move:
 				child = self.simulateMove(deepcopy(env), idx, self.opponent.position) 
 				max_v = max(max_v, self.MIN(child, idx, depth-1))
 		return max_v
 
 	def MIN(self, env,prev_move, depth):
-		#not sure here?
 		if env.gameOver(prev_move,self.position):
-			return -inf
+			return inf
 		if depth == 0:
 			return self.eval(env)
 		possible = env.topPosition >= 0
