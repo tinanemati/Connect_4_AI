@@ -97,10 +97,10 @@ class minimaxAI(connect4Player):
 			#print(self.board[i])
 			for j in range(7):
 				if env.board[i][j] == 1:	
-					count_player1 += 1
+					count += 1
 				
 				# if env.board[i][j] == 2:	
-				# 	count_player += 1
+				# 	count -= 1
 				else:
 					if count == 0:
 						continue
@@ -125,7 +125,7 @@ class minimaxAI(connect4Player):
 				if env.board[j][i] == self.position:	
 					count += 1
 				elif env.board[j][i] == self.opponent.position:	
-					count += 1
+					count -= 1
 					
 				else:
 					if count == 0:
