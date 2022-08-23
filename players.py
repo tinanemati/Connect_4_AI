@@ -81,121 +81,78 @@ class stupidAI(connect4Player):
 			move[:] = [0]
 
 class minimaxAI(connect4Player):
-	# Evaluation Functions For miniMax AI
-	# eval(env) = 1 C1 + 5 C2 + 10 C3
 	def eval (self, env):
-		# determine the players
-		if self.position == 1:
-			player = 1
-		else:
-			player = 2
-		
-		output_dict = {}
+		window_length = 4
+		res = 0
 		# check the rows
 		for i in range(6):
-			count = 0
-			#print(self.board[i])
-			for j in range(7):
-				if env.board[i][j] == 1:	
-					count_player1 += 1
-				
-				# if env.board[i][j] == 2:	
-				# 	count_player += 1
-				else:
-					if count == 0:
-						continue
-					if count in output_dict:
-						output_dict[count] += 1 
-					else:
-						output_dict[count] = 1
-						
-					count = 0
-
-			if count in output_dict and count!=0:
-				output_dict[count] += 1 
-			elif not(count in output_dict) and count != 0 :
-				output_dict[count] = 1
-			#print(output_dict)
-
-
-		# check the columns
+			curr_row = [int(j) for j in list(env.board[i:])]
+			for c in range(4):
+				window = curr_row[c:c+window_length]
+				if window.count(self.position) == 3:
+					res += 100
+				elif window.count(self.position) == 2:
+					res += 10
+				elif window.count(self.position) == 1:
+					res += 1
+				if window.count(self.opponent.position) == 3:
+					res -= 100
+				elif window.count(self.opponent.position) == 2:
+					res -= 10
+				elif window.count(self.opponent.position) == 2:
+					res -= 1
+		# check column
 		for i in range(7):
-			count = 0
-			for j in range(6):
-				if env.board[j][i] == self.position:	
-					count += 1
-				elif env.board[j][i] == self.opponent.position:	
-					count += 1
-					
-				else:
-					if count == 0:
-						continue
-					if count in output_dict:
-						output_dict[count] += 1 
-					else:
-						output_dict[count] = 1
-					count = 0
+			curr_column = [int (j) for j in list(env.board[:i])]
+			for c in range(3):
+				window = curr_column[c:c+window_length]
+				if window.count(self.position) == 3:
+					res += 100
+				elif window.count(self.position) == 2:
+					res += 10
+				elif window.count(self.position) == 1:
+					res += 1
+				if window.count(self.opponent.position) == 3:
+					res -= 100
+				elif window.count(self.opponent.position) == 2:
+					res -= 10
+				elif window.count(self.opponent.position) == 2:
+					res -= 1
 
-			if count in output_dict and count!=0:
-				output_dict[count] += 1 
-			elif not(count in output_dict) and count != 0 :
-				output_dict[count] = 1
-			#print(output_dict)
-					
-			
-		# Check Diagonals use
-		for i in range(-2,4):
-			count = 0
-			row = env.board.diagonal(i)
-			#print(row)
-			for j in range(len(row)):
-				
-				if row[j] == player:	
-					count += 1
-				else:
-					if count == 0:
-						continue
-					if count in output_dict:
-						output_dict[count] += 1 
-					else:
-						output_dict[count] = 1
-					count = 0
-
-			if count in output_dict and count!=0:
-				output_dict[count] += 1 
-			elif not(count in output_dict) and count != 0 :
-				output_dict[count] = 1
-			#print(output_dict)
-
-		flipped_board = np.fliplr(env.board)
-		#print(flipped_board)
-		for i in range(-2,4):
-			count = 0
-			row = flipped_board.diagonal(i)
-			#print(row)
-			for j in range(len(row)):
-				if row[j] == player:	
-					count += 1
-				else:
-					if count == 0:
-						continue
-					if count in output_dict:
-						output_dict[count] += 1 
-					else:
-						output_dict[count] = 1
-					count = 0
-
-			if count in output_dict and count!=0:
-				output_dict[count] += 1 
-			elif not(count in output_dict) and count != 0 :
-				output_dict[count] = 1
-
-		#this is where I had to chage the res, but it is still not right
-		# I don't know exactly how does it word to fix it. 	
-		#print(output_dict)
-		#res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
-		res = 1 * output_dict.get(1,0) + 5 * output_dict.get(2,0) + 10 * output_dict.get(3,0)
-		#print("score res from eval: " + res)
+		# Check Diagonals 
+		for r in range(3):
+			for c in range(4):
+				window = [env.board[r+i][c+i] for i in range(4)]
+				if window.count(self.position) == 3:
+					res += 100
+				elif window.count(self.position) == 2:
+					res += 10
+				elif window.count(self.position) == 1:
+					res += 1
+				if window.count(self.opponent.position) == 3:
+					res -= 100
+				elif window.count(self.opponent.position) == 2:
+					res -= 10
+				elif window.count(self.opponent.position) == 2:
+					res -= 1
+		
+		for r in range(3):
+			for c in range(4):
+				window = [env.board[r+i][c+i] for i in range(4)]
+				if window.count(self.position) == 3:
+					res += 100
+				elif window.count(self.position) == 2:
+					res += 10
+				elif window.count(self.position) == 1:
+					res += 1
+				if window.count(self.opponent.position) == 3:
+					res -= 100
+				elif window.count(self.opponent.position) == 2:
+					res -= 10
+				elif window.count(self.opponent.position) == 2:
+					res -= 1
+		
+		
 		return res
 
 	def simulateMove(self, env, move, player):
@@ -273,7 +230,6 @@ size = (width, height)
 RADIUS = int(SQUARESIZE/2 - 5)
 
 screen = pygame.display.set_mode(size)
-
 
 
 
