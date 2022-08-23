@@ -79,7 +79,6 @@ class stupidAI(connect4Player):
 		else:
 			move[:] = [0]
 
-#does the evalution make sense?
 class minimaxAI(connect4Player):
 	# Evaluation Functions For miniMax AI
 	# eval(env) = 1 C1 + 5 C2 + 10 C3
@@ -91,17 +90,17 @@ class minimaxAI(connect4Player):
 			player = 2
 		move = self.playTurn()
 		# if we win
-		if self.gameOver(move, player) and player ==1:
+		if env.gameOver(move, player) and player ==1:
 			return inf
 		# if we lose
-		elif self.gameOver(move, player) and player ==2:
+		elif env.gameOver(move, player) and player ==2:
 			return -inf
 	
 		output_dict = {}
 		# check the rows
 		for i in range(6):
 			count = 0
-			print(self.board[i])
+			#print(self.board[i])
 			for j in range(7):
 				if self.board[i][j] == player:	
 					count += 1
@@ -120,7 +119,7 @@ class minimaxAI(connect4Player):
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
-			print(output_dict)
+			#print(output_dict)
 
 
 		# check the columns
@@ -143,14 +142,14 @@ class minimaxAI(connect4Player):
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
-			print(output_dict)
+			#print(output_dict)
 					
 			
 		# Check Diagonals use
 		for i in range(-2,4):
 			count = 0
 			row = self.board.diagonal(i)
-			print(row)
+			#print(row)
 			for j in range(len(row)):
 				
 				if row[j] == player:	
@@ -168,14 +167,14 @@ class minimaxAI(connect4Player):
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
-			print(output_dict)
+			#print(output_dict)
 
-		flipped_board = numpy.fliplr(self.board)
-		print(flipped_board)
+		flipped_board = np.fliplr(self.board)
+		#print(flipped_board)
 		for i in range(-2,4):
 			count = 0
 			row = flipped_board.diagonal(i)
-			print(row)
+			#print(row)
 			for j in range(len(row)):
 				if row[j] == player:	
 					count += 1
@@ -193,9 +192,9 @@ class minimaxAI(connect4Player):
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
 			
-		print(output_dict)
+		#print(output_dict)
 		res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
-		print(res)
+		#print(res)
 		return res
 
 	def simulateMove(self, env, move, player):
@@ -203,25 +202,25 @@ class minimaxAI(connect4Player):
 		env.topPosition[move] -= 1
 		env.history[0].append(move)
 
-	def MAX(self, env, depth):
-		if env.gameOver(env) or depth == 0:
+	def MAX(self, env, prev_move, depth):
+		if env.gameOver(prev_move,self.opponent.position) or depth == 0:
 			return eval(env)
 		possible = env.topPosition >= 0
 		max_v = -inf
 		for move in possible:
 			child = self.simulateMove(deepcopy(env), move, self.opponent.position) 
-			max_v = max(max_v, self.MIN(child, depth-1))
+			max_v = max(max_v, self.MIN(child, env.history[0], depth-1))
 		return max_v
 
-	def MIN(self, env, depth):
-		if env.gameOver(env) or depth == 0:
+	def MIN(self, env,prev_move, depth):
+		if env.gameOver(prev_move,self.position) or depth == 0:
 			return eval(env)
 		possible = env.topPosition >= 0
 		max_v = inf
 		for move in possible:
 
 			child = self.simulateMove(deepcopy(env), move, self.position)
-			max_v = min(max_v, self.MAX(child, depth-1))
+			max_v = min(max_v, self.MAX(child, env.history[0], depth-1))
 		return max_v
 	
 	def Minimax(self,env, move, max_depth):
@@ -229,13 +228,13 @@ class minimaxAI(connect4Player):
 		max_v = -inf
 		for move in possible:
 			child = self.simulateMove(deepcopy(env), move, self.opponent.position)
-			v = self.MIN(child, max_depth-1)
+			v = self.MIN(child, env.history[0], max_depth-1)
 			if v > max_v:
 				max_v = v
 				move[:] = [move]
 
 	def play(self, env, move):
-		self.Minimax(deepcopy(env), move, 5)
+		self.Minimax(deepcopy(env), move, 2)
 		print("Finished")
 
 class alphaBetaAI(connect4Player):
