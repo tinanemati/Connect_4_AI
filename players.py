@@ -575,8 +575,8 @@ class alphaBetaAI(connect4Player):
 		
 		possible = env.topPosition >= 0
 		max_v = -inf
-		alpha = -inf
-		beta = inf
+		#alpha = -inf
+		#beta = inf
 		for idx,move in enumerate(possible):
 			if move:
 				child = self.simulateMove(deepcopy(env), idx, self.opponent.position) 
@@ -593,8 +593,8 @@ class alphaBetaAI(connect4Player):
 			return self.eval(env)
 		possible = env.topPosition >= 0
 		max_v = inf
-		alpha = -inf
-		beta = inf
+		#alpha = -inf
+		#beta = inf
 		for idx, move in enumerate(possible):
 			if move:
 				child = self.simulateMove(deepcopy(env), idx, self.position)
