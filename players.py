@@ -508,9 +508,9 @@ class alphaBetaAI(connect4Player):
                 output_dict2[count] = 1
 
         res_self = 1 * \
-            output_dict.get(1, 0) + 5 * output_dict.get(2,0)+ 100 * output_dict.get(3, 0)
+            output_dict.get(1, 0) + 5 * output_dict.get(2,0)+ 500 * output_dict.get(3, 0)
         res_opponent = 1 * \
-            output_dict2.get(1, 0) + 5 * output_dict2.get(2,0) + 100 * output_dict2.get(3, 0)
+            output_dict2.get(1, 0) + 5 * output_dict2.get(2,0) + 500 * output_dict2.get(3, 0)
         return res_self - res_opponent
 
     def simulateMove(self, env, move, player):
