@@ -91,11 +91,19 @@ class stupidAI(connect4Player):
 
 class minimaxAI(connect4Player):
     # Evaluation Functions For miniMax AI
-    # eval(env) = landa1 C1 + landa2 C2 + landa3 C3
     def eval(self, env):
         output_dict = {}
         output_dict2 = {}
-        # check the rows for self
+        
+        #Rough Steps
+        #Step 1: count the num of 3's, 2's and 1's for self.position in each row, column and diagonals.
+        #Step 2: count the num of 3's, 2's and 1's for self.opponent.position in each row, column and diagonals.
+        #Step 3: store the count in two dictionaries; ex: output_dict['3': 1, '2':2, '1':5] (self) and output_dict2['3': 1, '2':2, '1':5] for opponent.
+        #Step 4: calculate the score: res_self = 1 * output_dict.get(1, 0) + 25 * output_dict.get(2, 0) + 100 * output_dict.get(3, 0)
+        #                             res_opponent = 1 * output_dict2.get(1, 0) + 25 * output_dict2.get(2,0)+ 100 * output_dict2.get(3, 0)
+        #Step 5: return res_self-res_opponent
+        
+        # count the num of 3's, 2's and 1's for self.position in each row
         for i in range(6):
             count = 0
             for j in range(7):
@@ -115,7 +123,7 @@ class minimaxAI(connect4Player):
                 output_dict[count] += 1
             elif not (count in output_dict) and count != 0:
                 output_dict[count] = 1
-        # check the rows for opponents
+        # count the num of 3's, 2's and 1's for opponent in each row
         for i in range(6):
             count = 0
             for j in range(7):
@@ -135,7 +143,7 @@ class minimaxAI(connect4Player):
                 output_dict2[count] += 1
             elif not (count in output_dict2) and count != 0:
                 output_dict2[count] = 1
-        # check the columns for self
+        # count the num of 3's, 2's and 1's for self in each column
         for i in range(7):
             count = 0
             for j in range(6):
@@ -154,7 +162,7 @@ class minimaxAI(connect4Player):
                 output_dict[count] += 1
             elif not (count in output_dict) and count != 0:
                 output_dict[count] = 1
-        # check the columns for opponents
+        # count the num of 3's, 2's and 1's for opponent in each column
         for i in range(7):
             count = 0
             for j in range(6):
@@ -174,7 +182,7 @@ class minimaxAI(connect4Player):
             elif not (count in output_dict2) and count != 0:
                 output_dict2[count] = 1
 
-        # Check Diagonals for self
+        # count the num of 3's, 2's and 1's for self in left diagonal
         for i in range(-2, 4):
             count = 0
             row = env.board.diagonal(i)
@@ -195,7 +203,7 @@ class minimaxAI(connect4Player):
                 output_dict[count] += 1
             elif not (count in output_dict) and count != 0:
                 output_dict[count] = 1
-        # Check Diagonals for opponent
+        # count the num of 3's, 2's and 1's for opponent in left diagonal
         for i in range(-2, 4):
             count = 0
             row = env.board.diagonal(i)
@@ -216,9 +224,12 @@ class minimaxAI(connect4Player):
                 output_dict2[count] += 1
             elif not (count in output_dict2) and count != 0:
                 output_dict2[count] = 1
-
+                
+                
+        # count the num of 3's, 2's and 1's for self in right diagonal
+        
         flipped_board = np.fliplr(env.board)
-        # check left diagnoals for self
+       
         for i in range(-2, 4):
             count = 0
             row = flipped_board.diagonal(i)
@@ -238,7 +249,8 @@ class minimaxAI(connect4Player):
                 output_dict[count] += 1
             elif not (count in output_dict) and count != 0:
                 output_dict[count] = 1
-        # check left diagnoals for opponent
+                
+        # count the num of 3's, 2's and 1's for opponent in right diagonal
         for i in range(-2, 4):
             count = 0
             row = flipped_board.diagonal(i)
@@ -259,6 +271,9 @@ class minimaxAI(connect4Player):
             elif not (count in output_dict2) and count != 0:
                 output_dict2[count] = 1
 
+        #Step 4: calculate the final score for self and self.opponent
+        #Step 5: return res_self-res_opponent
+        
         res_self = 1 * output_dict.get(1, 0) + 25 * output_dict.get(2, 0) + 100 * output_dict.get(3, 0)
         res_opponent = 1 * output_dict2.get(1, 0) + 25 * output_dict2.get(2,0)+ 100 * output_dict2.get(3, 0)
         return res_self - res_opponent
