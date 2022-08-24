@@ -85,18 +85,19 @@ class minimaxAI(connect4Player):
 	# eval(env) = 1 C1 + 5 C2 + 10 C3
 	def eval (self, env):
 		# determine the players
-		if self.position == 1:
-			player = 1
-		else:
-			player = 2
+		# if self.position == 1:
+		# 	player = 1
+		# else:
+		# 	player = 2
 		
 		output_dict = {}
-		# check the rows
+		output_dict2 = {}
+		# check the rows for self
 		for i in range(6):
 			count = 0
 			#print(self.board[i])
 			for j in range(7):
-				if env.board[i][j] == 1:	
+				if env.board[i][j] == self.position:	
 					count += 1
 				
 				# if env.board[i][j] == 2:	
@@ -116,16 +117,41 @@ class minimaxAI(connect4Player):
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
 			#print(output_dict)
+		# check the rows for opponents
+		for i in range(6):
+			count = 0
+			#print(self.board[i])
+			for j in range(7):
+				if env.board[i][j] == self.opponent.position:	
+					count += 1
+				
+				# if env.board[i][j] == 2:	
+				# 	count -= 1
+				else:
+					if count == 0:
+						continue
+					if count in output_dict2:
+						output_dict2[count] += 1 
+					else:
+						output_dict2[count] = 1
+						
+					count = 0
+
+			if count in output_dict2 and count!=0:
+				output_dict2[count] += 1 
+			elif not(count in output_dict2) and count != 0 :
+				output_dict2[count] = 1
+			#print(output_dict)
 
 
-		# check the columns
+		# check the columns for self
 		for i in range(7):
 			count = 0
 			for j in range(6):
 				if env.board[j][i] == self.position:	
 					count += 1
-				elif env.board[j][i] == self.opponent.position:	
-					count -= 1
+				# elif env.board[j][i] == self.opponent.position:	
+				# 	count -= 1
 					
 				else:
 					if count == 0:
@@ -141,16 +167,39 @@ class minimaxAI(connect4Player):
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
 			#print(output_dict)
+		# check the columns for opponents
+		for i in range(7):
+			count = 0
+			for j in range(6):
+				if env.board[j][i] == self.opponent.position:	
+					count += 1
+				# elif env.board[j][i] == self.opponent.position:	
+				# 	count -= 1
+					
+				else:
+					if count == 0:
+						continue
+					if count in output_dict2:
+						output_dict2[count] += 1 
+					else:
+						output_dict2[count] = 1
+					count = 0
+
+			if count in output_dict2 and count!=0:
+				output_dict2[count] += 1 
+			elif not(count in output_dict2) and count != 0 :
+				output_dict2[count] = 1
+			#print(output_dict)
 					
 			
-		# Check Diagonals use
+		# Check Diagonals for self
 		for i in range(-2,4):
 			count = 0
 			row = env.board.diagonal(i)
 			#print(row)
 			for j in range(len(row)):
 				
-				if row[j] == player:	
+				if row[j] == self.position:	
 					count += 1
 				else:
 					if count == 0:
@@ -166,15 +215,39 @@ class minimaxAI(connect4Player):
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
 			#print(output_dict)
+		# Check Diagonals for opponent
+		for i in range(-2,4):
+			count = 0
+			row = env.board.diagonal(i)
+			#print(row)
+			for j in range(len(row)):
+				
+				if row[j] == self.opponent.position:	
+					count += 1
+				else:
+					if count == 0:
+						continue
+					if count in output_dict2:
+						output_dict2[count] += 1 
+					else:
+						output_dict2[count] = 1
+					count = 0
+
+			if count in output_dict2 and count!=0:
+				output_dict2[count] += 1 
+			elif not(count in output_dict2) and count != 0 :
+				output_dict2[count] = 1
+			#print(output_dict)
 
 		flipped_board = np.fliplr(env.board)
+		# check left diagnoals for self
 		#print(flipped_board)
 		for i in range(-2,4):
 			count = 0
 			row = flipped_board.diagonal(i)
 			#print(row)
 			for j in range(len(row)):
-				if row[j] == player:	
+				if row[j] == self.position:	
 					count += 1
 				else:
 					if count == 0:
@@ -189,14 +262,39 @@ class minimaxAI(connect4Player):
 				output_dict[count] += 1 
 			elif not(count in output_dict) and count != 0 :
 				output_dict[count] = 1
+		# check left diagnoals for opponent
+		#print(flipped_board)
+		for i in range(-2,4):
+			count = 0
+			row = flipped_board.diagonal(i)
+			#print(row)
+			for j in range(len(row)):
+				if row[j] == self.opponent.position:
+					count += 1
+				else:
+					if count == 0:
+						continue
+					if count in output_dict2:
+						output_dict2[count] += 1 
+					else:
+						output_dict2[count] = 1
+					count = 0
+
+			if count in output_dict2 and count!=0:
+				output_dict2[count] += 1 
+			elif not(count in output_dict2) and count != 0 :
+				output_dict2[count] = 1
 
 		#this is where I had to chage the res, but it is still not right
 		# I don't know exactly how does it word to fix it. 	
 		#print(output_dict)
 		#res = 1 * output_dict[1] + 5 * output_dict[2] + 10 * output_dict[3]
-		res = 1 * output_dict.get(1,0) + 5 * output_dict.get(2,0) + 10 * output_dict.get(3,0)
+		res_self = 1 * output_dict.get(1,0) + 5 * output_dict.get(2,0) + 10 * output_dict.get(3,0)
+		res_opponent = 1 * output_dict2.get(1,0) + 5 * output_dict2.get(2,0) + 10 * output_dict2.get(3,0)
 		#print("score res from eval: " + res)
-		return res
+
+
+		return res_self - res_opponent
 
 	def simulateMove(self, env, move, player):
 		env.board[env.topPosition[move]][move] = player
@@ -273,7 +371,6 @@ size = (width, height)
 RADIUS = int(SQUARESIZE/2 - 5)
 
 screen = pygame.display.set_mode(size)
-
 
 
 
