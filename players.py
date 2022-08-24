@@ -274,8 +274,8 @@ class minimaxAI(connect4Player):
         #Step 4: calculate the final score for self and self.opponent
         #Step 5: return res_self-res_opponent
         
-        res_self = 1 * output_dict.get(1, 0) + 25 * output_dict.get(2, 0) + 100 * output_dict.get(3, 0)
-        res_opponent = 1 * output_dict2.get(1, 0) + 25 * output_dict2.get(2,0)+ 100 * output_dict2.get(3, 0)
+        res_self = 1 * output_dict.get(1, 0) + 5 * output_dict.get(2, 0) + 500 * output_dict.get(3, 0)
+        res_opponent = 1 * output_dict2.get(1, 0) + 5 * output_dict2.get(2,0)+ 500 * output_dict2.get(3, 0)
         return res_self - res_opponent
 
     def simulateMove(self, env, move, player):
@@ -295,7 +295,7 @@ class minimaxAI(connect4Player):
         for idx, move in enumerate(possible):
             if move:
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.opponent.position)
+                    deepcopy(env), idx, self.position)
                 max_v = max(max_v, self.MIN(child, idx, depth-1))
         return max_v
 
@@ -308,7 +308,7 @@ class minimaxAI(connect4Player):
         max_v = inf
         for idx, move in enumerate(possible):
             if move:
-                child = self.simulateMove(deepcopy(env), idx, self.position)
+                child = self.simulateMove(deepcopy(env), idx, self.opponent.position)
                 max_v = min(max_v, self.MAX(child, idx, depth-1))
         return max_v
 
@@ -318,14 +318,15 @@ class minimaxAI(connect4Player):
         for idx, next_move in enumerate(possible):
             if next_move:  # move is true if possible
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.opponent.position)
+                    deepcopy(env), idx, self.position)
                 v = self.MIN(child, idx, max_depth-1)
                 if v > max_v:
                     max_v = v
                     move[:] = [idx]
 
     def play(self, env, move):
-        self.Minimax(deepcopy(env), move, 2)
+        max_depth = 2
+        self.Minimax(deepcopy(env), move, max_depth)
         print("Finished")
 
 
@@ -507,9 +508,9 @@ class alphaBetaAI(connect4Player):
                 output_dict2[count] = 1
 
         res_self = 1 * \
-            output_dict.get(1, 0) + 25 * output_dict.get(2,0)+ 100 * output_dict.get(3, 0)
+            output_dict.get(1, 0) + 5 * output_dict.get(2,0)+ 100 * output_dict.get(3, 0)
         res_opponent = 1 * \
-            output_dict2.get(1, 0) + 25 * output_dict2.get(2,0) + 100 * output_dict2.get(3, 0)
+            output_dict2.get(1, 0) + 5 * output_dict2.get(2,0) + 100 * output_dict2.get(3, 0)
         return res_self - res_opponent
 
     def simulateMove(self, env, move, player):
@@ -529,7 +530,7 @@ class alphaBetaAI(connect4Player):
         for idx, move in enumerate(possible):
             if move:
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.opponent.position)
+                    deepcopy(env), idx, self.position)
                 max_v = max(max_v, self.MIN(child, idx, depth-1, alpha, beta))
                 alpha = max(alpha, max_v)
                 if max_v >= beta:
@@ -545,7 +546,7 @@ class alphaBetaAI(connect4Player):
         max_v = inf
         for idx, move in enumerate(possible):
             if move:
-                child = self.simulateMove(deepcopy(env), idx, self.position)
+                child = self.simulateMove(deepcopy(env), idx, self.opponent.position)
                 max_v = min(max_v, self.MAX(child, idx, depth-1, alpha, beta))
                 beta = min(beta, max_v)
                 if max_v <= alpha:
@@ -555,10 +556,17 @@ class alphaBetaAI(connect4Player):
     def AlphabetaPruning(self, env, move, max_depth, alpha, beta):
         possible = env.topPosition >= 0
         max_v = -inf
+        '''possible = env.topPosition >= 0
+        indices = []
+        for i, p in enumerate(possible):
+            if p:
+                indices.append(i)
+        REARRANGE INDICIES TO BE BEST
+        '''
         for idx, next_move in enumerate(possible):
             if next_move:  # move is true if possible
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.opponent.position)
+                    deepcopy(env), idx, self.position)
                 v = self.MIN(child, idx, max_depth-1, alpha, beta)
                 if v > max_v:
                     max_v = v
@@ -567,7 +575,8 @@ class alphaBetaAI(connect4Player):
     def play(self, env, move):
         alpha = -inf
         beta = inf
-        self.AlphabetaPruning(deepcopy(env), move, 2, alpha, beta)
+        max_depth = 2
+        self.AlphabetaPruning(deepcopy(env), move, max_depth, alpha, beta)
         print("Finished")
 
 
