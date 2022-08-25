@@ -4,12 +4,11 @@
   
   To make things easier and faster for us to read and go over the code, we took advantage of Michael's implementaion of min and max in PA2 helper video.
   
-  we have methods called: 'def MAX(self, env, prev_move, depth, alpha, beta)`and def MIN(self, env, prev_move, depth, alpha, beta)` that return the 
+  we have methods called: `def MAX(self, env, prev_move, depth, alpha, beta)`and `def MIN(self, env, prev_move, depth, alpha, beta)` that return the 
   updated value of '`MIN` and updated value of `MAX` for us, so we are able to store that in `max_v`and `min_v` variables. Afterwards, we will save and   
   make the next move using our driver function. 
   
-  Using our minimax implementation with alpha-beta pruning, allowed us to play faster since we are able to prune some nodes and don't go through them, as 
-  result we are winning most of the 20 games. 
+  Using our minimax implementation with alpha-beta pruning, allowed us to play faster since we are able to prune some nodes and don't go through them, as result we are winning most of the 20 games. 
   
   
   
