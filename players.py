@@ -566,32 +566,36 @@ class alphaBetaAI(connect4Player):
     def AlphabetaPruning(self, env, move, max_depth, alpha, beta):
         possible = env.topPosition >= 0
         max_v = -inf
-        '''possible = env.topPosition >= 0
-        indices = []
-        for i, p in enumerate(possible):
-            if p:
-                indices.append(i)
-        REARRANGE INDICIES TO BE BEST
-        '''
-        possible = env.topPosition >= 0
+        
+        #NODES NOT ARRANGED TO BE THE BEST: 
+        for idx, next_move in enumerate(possible):
+            if next_move:  # move is true if possible
+                child = self.simulateMove(
+                    deepcopy(env), idx, self.position)
+                v = self.MIN(child, idx, max_depth-1, alpha, beta)
+                if v > max_v:
+                    max_v = v
+                    move[:] = [idx]
+        ''''
+        #REARRANGE NODES TO BE BEST
+        possible = env.topPosition >= 0 #[0:True,1:True,2:True,3,4,5,6]
         best_move = []
-        for idx in self.optimal_move:
-            print("here!")
-            if possible[idx] == True:
-                print("inside the if statement before append!")
-                print(best_move)
+        for idx in self.optimal_move: #[3,2,4,1,5,0,6]
+            #print("here!")
+            if possible[idx] == True: #[T,T,T,T,T,T]  possible[0] == T
+                #print("inside the if statement before append!")
+                #print(best_move)
                 best_move.append(idx)
-                print("inside if statement after append!")
-                print(best_move)
-        for index in best_move:
-            if move:
+                #print("inside if statement after append!")
+                #print(best_move)
+        for index in best_move: #[3, 4, 1, 5, 0]
                 child = self.simulateMove(
                     deepcopy(env), index, self.position)
                 v = self.MIN(child, index, max_depth-1, alpha, beta)
                 if v > max_v:
                     max_v = v
                     move[:] = [index]
-
+        '''
     def play(self, env, move):
         alpha = -inf
         beta = inf
