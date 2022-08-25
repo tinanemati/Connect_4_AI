@@ -54,6 +54,6 @@
   | seed 6| p1 wins              | p2 wins             |
   | seed 7| p1 wins               | p2 wins             |    
   | seed 8| p1 wins              | p2 wins             |
-  | seed 9| p2 wins              | p2 wins             |
+  | seed 9| p1 wins              | p2 wins             |
   
   
