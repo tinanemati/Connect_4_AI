@@ -527,6 +527,7 @@ class alphaBetaAI(connect4Player):
             return self.eval(env)
         max_v = -inf
         possible = env.topPosition >= 0
+        '''
         best_move = []
         for idx in self.optimal_move:
             #print("optimal move: " + self.optimal_move)
@@ -538,17 +539,27 @@ class alphaBetaAI(connect4Player):
                     deepcopy(env), index, self.position)
                 max_v = max(max_v, self.MIN(child, index, depth-1, alpha, beta))
                 alpha = max(alpha, max_v)
+        '''
+        for idx, move in enumerate(possible):
+            if move:
+                child = self.simulateMove(
+                    deepcopy(env), idx, self.position)
+                max_v = max(max_v, self.MIN(child, idx, alpha, beta, depth-1))
+                alpha = max(alpha, max_v)
                 if max_v >= beta:
                     break
         return max_v
-
+        
+    
     def MIN(self, env, prev_move, depth, alpha, beta):
         if env.gameOver(prev_move, self.position):
             return inf
         if depth == 0:
             return self.eval(env)
-        max_v = inf
+        min_v = inf
         possible = env.topPosition >= 0
+
+        '''
         best_move = []
         for idx in self.optimal_move:
             #print("optimal move: " + self.optimal_move)
@@ -558,10 +569,18 @@ class alphaBetaAI(connect4Player):
         for index in best_move:
                 child = self.simulateMove(deepcopy(env), index, self.opponent.position)
                 max_v = min(max_v, self.MAX(child, index, depth-1, alpha, beta))
-                beta = min(beta, max_v)
+        '''
+
+        for idx, move in enumerate(possible):
+            if move:
+                child = self.simulateMove(deepcopy(env), idx, self.opponent.position)
+                max_v = min(min_v, self.MAX(child, idx, depth-1, alpha, beta))
+                beta = min(beta, min_v)
                 if max_v <= alpha:
                     break
-        return max_v
+        return min_v
+
+        
 
     def AlphabetaPruning(self, env, move, max_depth, alpha, beta):
         possible = env.topPosition >= 0
