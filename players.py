@@ -9,9 +9,10 @@ import math
 
 
 class connect4Player(object):
-    def __init__(self, position, seed=0):
+    def __init__(self, position, optimal_move,seed=0):
         self.position = position
         self.opponent = None
+        self.optimal_move = optimal_move
         self.seed = seed
         random.seed(seed)
 
@@ -524,14 +525,16 @@ class alphaBetaAI(connect4Player):
             return -inf
         if depth == 0:
             return self.eval(env)
-
-        possible = env.topPosition >= 0
         max_v = -inf
-        for idx, move in enumerate(possible):
-            if move:
+        possible = env.topPosition >= 0
+        best_move = []
+        for idx in self.optimal_move:
+            if possible[idx] == True:
+                best_move.append(idx)
+        for index in best_move:
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.position)
-                max_v = max(max_v, self.MIN(child, idx, depth-1, alpha, beta))
+                    deepcopy(env), index, self.position)
+                max_v = max(max_v, self.MIN(child, index, depth-1, alpha, beta))
                 alpha = max(alpha, max_v)
                 if max_v >= beta:
                     break
@@ -542,12 +545,17 @@ class alphaBetaAI(connect4Player):
             return inf
         if depth == 0:
             return self.eval(env)
-        possible = env.topPosition >= 0
         max_v = inf
-        for idx, move in enumerate(possible):
-            if move:
-                child = self.simulateMove(deepcopy(env), idx, self.opponent.position)
-                max_v = min(max_v, self.MAX(child, idx, depth-1, alpha, beta))
+        possible = env.topPosition >= 0
+        best_move = []
+        for idx in self.optimal_move:
+            print("optimal move: " + self.optimal_move)
+            if possible[idx] == True:
+                best_move.append(idx)
+                print("best move: " + best_move)
+        for index in best_move:
+                child = self.simulateMove(deepcopy(env), index, self.opponent.position)
+                max_v = min(max_v, self.MAX(child, index, depth-1, alpha, beta))
                 beta = min(beta, max_v)
                 if max_v <= alpha:
                     break
@@ -563,19 +571,25 @@ class alphaBetaAI(connect4Player):
                 indices.append(i)
         REARRANGE INDICIES TO BE BEST
         '''
-        for idx, next_move in enumerate(possible):
-            if next_move:  # move is true if possible
+        possible = env.topPosition >= 0
+        best_move = []
+        for idx in self.optimal_move:
+            if possible[idx]:
+                best_move.append(idx)
+        for index in best_move:
+            if move:
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.position)
-                v = self.MIN(child, idx, max_depth-1, alpha, beta)
+                    deepcopy(env), index, self.position)
+                v = self.MIN(child, index, max_depth-1, alpha, beta)
                 if v > max_v:
                     max_v = v
-                    move[:] = [idx]
+                    move[:] = [index]
 
     def play(self, env, move):
         alpha = -inf
         beta = inf
         max_depth = 2
+        self.optimal_move = [3, 2, 4, 1, 5, 0, 6]
         self.AlphabetaPruning(deepcopy(env), move, max_depth, alpha, beta)
         print("Finished")
 
