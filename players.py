@@ -529,8 +529,10 @@ class alphaBetaAI(connect4Player):
         possible = env.topPosition >= 0
         best_move = []
         for idx in self.optimal_move:
+            #print("optimal move: " + self.optimal_move)
             if possible[idx] == True:
                 best_move.append(idx)
+                #print("best move: " + best_move)
         for index in best_move:
                 child = self.simulateMove(
                     deepcopy(env), index, self.position)
@@ -549,10 +551,10 @@ class alphaBetaAI(connect4Player):
         possible = env.topPosition >= 0
         best_move = []
         for idx in self.optimal_move:
-            print("optimal move: " + self.optimal_move)
+            #print("optimal move: " + self.optimal_move)
             if possible[idx] == True:
                 best_move.append(idx)
-                print("best move: " + best_move)
+                #print("best move: " + best_move)
         for index in best_move:
                 child = self.simulateMove(deepcopy(env), index, self.opponent.position)
                 max_v = min(max_v, self.MAX(child, index, depth-1, alpha, beta))
@@ -574,8 +576,13 @@ class alphaBetaAI(connect4Player):
         possible = env.topPosition >= 0
         best_move = []
         for idx in self.optimal_move:
-            if possible[idx]:
+            print("here!")
+            if possible[idx] == True:
+                print("inside the if statement before append!")
+                print(best_move)
                 best_move.append(idx)
+                print("inside if statement after append!")
+                print(best_move)
         for index in best_move:
             if move:
                 child = self.simulateMove(
