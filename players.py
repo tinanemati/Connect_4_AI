@@ -9,10 +9,9 @@ import math
 
 
 class connect4Player(object):
-    def __init__(self, position, optimal_move,seed=0):
+    def __init__(self, position, seed=0):
         self.position = position
         self.opponent = None
-        self.optimal_move = optimal_move
         self.seed = seed
         random.seed(seed)
 
@@ -525,97 +524,58 @@ class alphaBetaAI(connect4Player):
             return -inf
         if depth == 0:
             return self.eval(env)
-        max_v = -inf
+
         possible = env.topPosition >= 0
-        '''
-        best_move = []
-        for idx in self.optimal_move:
-            #print("optimal move: " + self.optimal_move)
-            if possible[idx] == True:
-                best_move.append(idx)
-                #print("best move: " + best_move)
-        for index in best_move:
-                child = self.simulateMove(
-                    deepcopy(env), index, self.position)
-                max_v = max(max_v, self.MIN(child, index, depth-1, alpha, beta))
-                alpha = max(alpha, max_v)
-        '''
+        max_v = -inf
         for idx, move in enumerate(possible):
             if move:
                 child = self.simulateMove(
                     deepcopy(env), idx, self.position)
-                max_v = max(max_v, self.MIN(child, idx, alpha, beta, depth-1))
+                max_v = max(max_v, self.MIN(child, idx, depth-1, alpha, beta))
                 alpha = max(alpha, max_v)
                 if max_v >= beta:
                     break
         return max_v
-        
-    
+
     def MIN(self, env, prev_move, depth, alpha, beta):
         if env.gameOver(prev_move, self.position):
             return inf
         if depth == 0:
             return self.eval(env)
-        min_v = inf
         possible = env.topPosition >= 0
-
-        '''
-        best_move = []
-        for idx in self.optimal_move:
-            #print("optimal move: " + self.optimal_move)
-            if possible[idx] == True:
-                best_move.append(idx)
-                #print("best move: " + best_move)
-        for index in best_move:
-                child = self.simulateMove(deepcopy(env), index, self.opponent.position)
-                max_v = min(max_v, self.MAX(child, index, depth-1, alpha, beta))
-        '''
-
+        max_v = inf
         for idx, move in enumerate(possible):
             if move:
                 child = self.simulateMove(deepcopy(env), idx, self.opponent.position)
-                max_v = min(min_v, self.MAX(child, idx, depth-1, alpha, beta))
-                beta = min(beta, min_v)
+                max_v = min(max_v, self.MAX(child, idx, depth-1, alpha, beta))
+                beta = min(beta, max_v)
                 if max_v <= alpha:
                     break
-        return min_v
-
-        
+        return max_v
 
     def AlphabetaPruning(self, env, move, max_depth, alpha, beta):
         possible = env.topPosition >= 0
         max_v = -inf
-        
-        #NODES NOT ARRANGED TO BE THE BEST: 
-        for idx, next_move in enumerate(possible): #[0:True,1:True,2:True,3:True,4:True,5:True,6:True]
+        '''possible = env.topPosition >= 0
+        indices = []
+        for i, p in enumerate(possible):
+            if p:
+                indices.append(i)
+        REARRANGE INDICIES TO BE BEST
+        '''
+        for idx, next_move in enumerate(possible):
             if next_move:  # move is true if possible
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.position) 
-                v = self.MIN(child, idx, max_depth-1, alpha, beta) #pass in the index(idx) where the move is possible
+                    deepcopy(env), idx, self.position)
+                v = self.MIN(child, idx, max_depth-1, alpha, beta)
                 if v > max_v:
                     max_v = v
                     move[:] = [idx]
-        ''''
-        #REARRANGE NODES TO BE BEST
-        possible = env.topPosition >= 0  #[0:True,1:True,2:True,3:True,4:True,5:True,6:True]
-        best_move = [] 
-        for idx in self.optimal_move: #[3,2,4,1,5,0,6]
-            if possible[idx] == True: # possibe = [True,True,True,True,True,True], we can make the move if possible[3] == True  
-                best_move.append(idx)
-        for index in best_move: #[3, 4, 1, 5, 0] #iterate through the re-aranged nose and make the best move
-                child = self.simulateMove(
-                    deepcopy(env), index, self.position)
-                v = self.MIN(child, index, max_depth-1, alpha, beta)
-                if v > max_v:
-                    max_v = v
-                    move[:] = [index]
-        '''
-        
+
     def play(self, env, move):
         alpha = -inf
         beta = inf
         max_depth = 2
-        self.optimal_move = [3, 2, 4, 1, 5, 0, 6]
         self.AlphabetaPruning(deepcopy(env), move, max_depth, alpha, beta)
         print("Finished")
 
