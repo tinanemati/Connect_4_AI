@@ -568,27 +568,22 @@ class alphaBetaAI(connect4Player):
         max_v = -inf
         
         #NODES NOT ARRANGED TO BE THE BEST: 
-        for idx, next_move in enumerate(possible):
+        for idx, next_move in enumerate(possible): #[0:True,1:True,2:True,3:True,4:True,5:True,6:True]
             if next_move:  # move is true if possible
                 child = self.simulateMove(
-                    deepcopy(env), idx, self.position)
-                v = self.MIN(child, idx, max_depth-1, alpha, beta)
+                    deepcopy(env), idx, self.position) 
+                v = self.MIN(child, idx, max_depth-1, alpha, beta) #pass in the index(idx) where the move is possible
                 if v > max_v:
                     max_v = v
                     move[:] = [idx]
         ''''
         #REARRANGE NODES TO BE BEST
-        possible = env.topPosition >= 0 #[0:True,1:True,2:True,3,4,5,6]
-        best_move = []
+        possible = env.topPosition >= 0  #[0:True,1:True,2:True,3:True,4:True,5:True,6:True]
+        best_move = [] 
         for idx in self.optimal_move: #[3,2,4,1,5,0,6]
-            #print("here!")
-            if possible[idx] == True: #[T,T,T,T,T,T]  possible[0] == T
-                #print("inside the if statement before append!")
-                #print(best_move)
+            if possible[idx] == True: # possibe = [True,True,True,True,True,True], we can make the move if possible[3] == True  
                 best_move.append(idx)
-                #print("inside if statement after append!")
-                #print(best_move)
-        for index in best_move: #[3, 4, 1, 5, 0]
+        for index in best_move: #[3, 4, 1, 5, 0] #iterate through the re-aranged nose and make the best move
                 child = self.simulateMove(
                     deepcopy(env), index, self.position)
                 v = self.MIN(child, index, max_depth-1, alpha, beta)
@@ -596,6 +591,7 @@ class alphaBetaAI(connect4Player):
                     max_v = v
                     move[:] = [index]
         '''
+        
     def play(self, env, move):
         alpha = -inf
         beta = inf
