@@ -31,7 +31,7 @@
   | games         | OurAgent - p1 vs. StupidAI -p2| StupidAI - p1 vs. OurAgent - p2 |
   | ------------- | ------------- | --------      |
   | game 1| p1 wins         | p2 wins             |    
-  | game 2| p1 winss        | p2 wins             |
+  | game 2| p1 wins      | p2 wins             |
   
   ● OurAgent vs RandomAI -- 5 times:
   | games         | OurAgent - p1 vs. RandomAI -p2| RandomAI - p1 vs. OurAgent - p2 |
@@ -39,21 +39,21 @@
   | seed 0| p1 wins         | p2 wins             |    
   | seed 1| p1 wins         | p2 wins             |
   | seed 2| p1 wins         | p2 wins             |    
-  | seed 3| p1 winss        | p2 wins             |
-  | seed 4| p1 winss        | p2 wins             |
+  | seed 3| p1 wins       | p2 wins             |
+  | seed 4| p1 wins       | p2 wins             |
   
   ● OurAgent vs MonteCarloAI -- 10 times:
   | games         | OurAgent - p1 vs. MonteCarloAI -p2| MonteCarloAI - p1 vs. OurAgent - p2 |
   | ------------- | ------------- | --------            |
   | seed 0| p1 wins               | p2 wins             |    
-  | seed 1| game is tied          | p2 wins             |
+  | seed 1| p1 wins          | p2 loses             |
   | seed 2| p1 wins               | p2 wins             |    
-  | seed 3| game is tied          | p2 wins             |
+  | seed 3| p1 wins          | p2 wins             |
   | seed 4| p1 wins               | p2 wins             |
   | seed 5| p1 wins               | p2 wins             |    
-  | seed 6| p1 winss              | p2 wins             |
+  | seed 6| p1 wins              | p2 wins             |
   | seed 7| p1 wins               | p2 wins             |    
-  | seed 8| p1 winss              | p2 wins             |
-  | seed 9| p2 winss              | p2 wins             |
+  | seed 8| p1 wins              | p2 wins             |
+  | seed 9| p2 wins              | p2 wins             |
   
   
