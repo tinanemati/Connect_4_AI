@@ -1,4 +1,4 @@
-# Project-2
+# AI Project
   Part II: Coding the Agent
   Using minimax with alpha-beta pruning, code your algorithm to play the game. 
   
