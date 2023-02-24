@@ -9,7 +9,7 @@
   
   3. Store the count in two dictionaries. 
       * Example: ```output_dict['3': 1, '2':2, '1':5]``` for self and ```output_dict2['3': 1, '2':2, '1':5]``` for opponent.
-  4. Calculate the score using the bellow functioon: 
+  4. Calculate the score using the bellow function: 
       * Note that the weight for the num of 3's consecative pieces is higher than 2's consecative pieces to assure we are blocking the opponet's move and priotizing the 3's pieces to 2's.
     
     res_self = 1 * output_dict.get(1, 0) + 25 * output_dict.get(2, 0) + 100 * output_dict.get(3, 0)
